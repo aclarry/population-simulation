@@ -7,9 +7,9 @@ import popsim.citizen.Citizen;
 
 public class Tile {
 
-  List<Citizen> citizens;
+  private List<Citizen> citizens;
 
-  double averageUtility;
+  private double averageUtility;
 
   /**
    * Default constructor for tile
@@ -25,7 +25,9 @@ public class Tile {
    *            The citizen to add to the tile
    */
   public void addCitizen(Citizen citizen) {
-    citizens.add(citizen);
+    if (citizen != null) {
+      citizens.add(citizen);
+    }
   }
 
   public void removeCitizen(Citizen citizen) {
@@ -39,6 +41,14 @@ public class Tile {
    */
   public double getAverageUtility() {
     return averageUtility;
+  }
+
+  public double getGlobalAverageUtility() {
+    return 0.0; 
+  }
+
+  public Tile getNewTile() {
+    return new Tile();
   }
 
   /**

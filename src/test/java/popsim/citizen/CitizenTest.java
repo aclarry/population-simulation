@@ -1,5 +1,6 @@
 package popsim.citizen;
 
+import java.util.Random;
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -12,15 +13,13 @@ public class CitizenTest {
 
   @Before
   public void before_ResetDefaultObjects() {
-    System.out.println("Resetting default objects");
-
     defaultHome = new Tile();
     defaultCitizen = new Citizen(defaultHome);
   }
 
   @Test
   public void test_ChangeTile() {
-    System.out.println("Testing tile updating");
+    // The size of the home tile before adding any new citizens
     int defaultHomeStartSize = defaultHome.getNumCitizens();
 
     assertSame(defaultHome, defaultCitizen.getHomeTile());
@@ -30,5 +29,18 @@ public class CitizenTest {
     assertEquals(defaultHomeStartSize - 1, defaultHome.getNumCitizens() );
     assertEquals(1, newHome.getNumCitizens());
   }
+
+//  @Test
+//    public void test_moveTile() {
+//      Random oneGenerator = new Random() {
+//        @Override
+//        nextDouble() {
+//        return 1.0;
+//        }
+//      }     
+//      Citizen testCitizen = new Citizen(defaultHome, oneGenerator);
+//      assertSame(defaultHome, testCitizen.getHomeTile());
+//      assertNotSame(defaultHome, testCitizen.getHomeTile());
+//    }
 
 }

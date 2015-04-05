@@ -12,16 +12,12 @@ public class TileTest {
 
   @Before
   public void create_otherTile() {
-    System.out.println("Resetting test objects");
-
     defaultTile = new Tile();
     otherTile = new Tile();
   }
 
   @Test
   public void test_AddCitizen() {
-    System.out.println("Testing adding consumers");
-
     assertEquals(defaultTile.getNumCitizens(), 0);
     defaultTile.addCitizen(new Citizen(otherTile));
     assertEquals(defaultTile.getNumCitizens(), 1);
@@ -31,9 +27,23 @@ public class TileTest {
   }
 
   @Test
-  public void test_GetUtility() {
-    System.out.println("Testing utility getting");
+  public void test_AddNullCitizen() {
+    // Add a new citizen
+    Citizen citizen = new Citizen(defaultTile);
+    int tileCitizensSize = defaultTile.getNumCitizens();
+    defaultTile.addCitizen(null);
+    assertEquals(tileCitizensSize, defaultTile.getNumCitizens());
+    // Try removing a null object
+    // defaultTile.removeCitizen(null);
+    assertEquals(tileCitizensSize, defaultTile.getNumCitizens());
+    // Try removing a citizen from another tile
+    Citizen newCitizen = new Citizen(otherTile);
+    defaultTile.removeCitizen(newCitizen);
+    assertEquals(tileCitizensSize, defaultTile.getNumCitizens());
+  }
 
+  @Test
+  public void test_GetUtility() {
     Citizen citizen1 = new Citizen(otherTile);
     defaultTile.addCitizen(citizen1);
     defaultTile.update();
