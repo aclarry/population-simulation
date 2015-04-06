@@ -58,4 +58,17 @@ public class TileTest {
     
   }
 
+  public void test_MoveCitizens() {
+    int numDefaultCitizens = defaultTile.getNumCitizens();
+    Citizen citizenToMove = new Citizen(defaultTile);
+    defaultTile.addCitizenToMove(citizenToMove);
+
+    // Adding a citizen to the list of citizens to move
+    // should not actually remove them
+    assertEquals(numDefaultCitizens + 1, defaultTile.getNumCitizens());
+    defaultTile.moveCitizens();
+    assertEquals(numDefaultCitizens, defaultTile.getNumCitizens());
+    
+  }
+
 }

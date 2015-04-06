@@ -25,21 +25,29 @@ public class Citizen {
     this.randomNumberGenerator = randomNumberGenerator;
   }
 
+  public Tile getHomeTile() {
+    return home;
+  }
+
   public void update() {
     updateUtility();
     if (willMove()) {
-      moveTile();
-    }
+      home.addCitizenToMove(this);
+    }  
+  }
+
+  /**
+   * Moves the citizen to a new tile, as given by the parent tile
+   */
+  public void moveTile() {
+    Tile newHome = home.getNewTile();
+    changeHomeTile(newHome);
   }
 
   public void changeHomeTile(Tile newHome) {
     home.removeCitizen(this);
     this.home = newHome;
     newHome.addCitizen(this);
-  }
-
-  public Tile getHomeTile() {
-    return home;
   }
 
   public double getUtility() {
@@ -50,8 +58,8 @@ public class Citizen {
     utility = 0 - home.getNumCitizens();
   }
 
-  private boolean willMove() {
-    return getMoveProbability() < randomNumberGenerator.nextDouble();
+  public boolean willMove() {
+    return getMoveProbability() >= randomNumberGenerator.nextDouble();
   }
 
   /**
@@ -59,25 +67,15 @@ public class Citizen {
    * the citizen will move next turn
    * This, in particular, is subject to change
    */
-  private double getMoveProbability() {
+  protected double getMoveProbability() {
     double moveProbability;
     double globalAverageUtil = home.getGlobalAverageUtility();
-    if (globalAverageUtil <= utility) {
-      moveProbability = 0.0;
+    if (utility < globalAverageUtil) {
+      moveProbability = (globalAverageUtil - utility)/Math.abs(globalAverageUtil + utility);
     } else {
-      moveProbability = (globalAverageUtil - utility)/globalAverageUtil;
+      moveProbability = 0.0;
     } 
     return moveProbability;
-  }
-
-  /**
-   * Moves the citizen to a new tile, as given by the parent tile
-   */
-  private void moveTile() {
-    Tile newHome;
-    newHome = home.getNewTile();
-
-    changeHomeTile(newHome);
   }
 
 }
