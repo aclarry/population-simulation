@@ -10,15 +10,18 @@ import popsim.entity.Entity;
 import popsim.entity.citizen.Citizen;
 import popsim.entity.citizen.CrowdPreferringCitizen;
 import popsim.entity.citizen.OpenPreferringCitizen;
+import popsim.entity.firm.Firm;
 
 public class Tile {
 
   private TileController controller;
   private List<Citizen> citizens;
+  private List<Firm> firms;
   private Set<Entity> entitiesToMove;
   private Random randomNumberGenerator;
 
   private double averageUtility;
+  private double averageProfit;
 
   /**
    * Default constructor for tile
@@ -26,7 +29,9 @@ public class Tile {
    */
   public Tile() {
     citizens = new ArrayList<Citizen>();
+    firms = new ArrayList<Firm>();
     averageUtility = 0.0;
+    averageProfit = 0.0;
     resetEntitiesToMove();
   }
 
@@ -88,6 +93,8 @@ public class Tile {
   public void addEntity(Entity entity) {
     if (entity instanceof Citizen) {
       citizens.add((Citizen) entity);
+    } else if (entity instanceof Firm) {
+      firms.add((Firm) entity);
     }
     // Else, do nothing
   }
@@ -101,6 +108,9 @@ public class Tile {
     if (entity instanceof Citizen) {
       citizens.remove(entity);
     } 
+    if (entity instanceof Firm) {
+      firms.remove(entity);
+    }
     // Else, do nothing
   }
   
@@ -111,6 +121,10 @@ public class Tile {
    */
   public double getAverageUtility() {
     return averageUtility;
+  }
+
+  public double getAverageProfit() {
+    return averageProfit;
   }
 
   public double getGlobalAverageUtility() {
@@ -148,6 +162,10 @@ public class Tile {
     return citizens.size();
   }
 
+  public int getNumFirms() {
+    return firms.size();
+  }
+
   /**
    * Updates the tile, updating every citizen and
    * updating the tile's private variables
@@ -157,6 +175,9 @@ public class Tile {
   public void update() {
     for (Citizen citizen : citizens) {
       citizen.update();
+    }
+    for (Firm firm : firms) {
+      firm.update();
     }
     moveEntities();
     updateAverageUtility();
@@ -189,6 +210,18 @@ public class Tile {
         total += citizen.getUtility();
       }
       averageUtility = total / citizens.size();
+    }
+  }
+
+  private void updateAverageProfit() {
+    double total = 0.0;
+    if (firms.size() == 0) {
+      averageProfit = 0.0;
+    } else {
+      for (Firm firm : firms) {
+        total += firm.getProfit();
+      }
+      averageProfit = total / firms.size();
     }
   }
 

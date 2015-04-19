@@ -56,7 +56,6 @@ public class TileTest {
     defaultTile.update();
     double averageUtility = (citizen1.getUtility() + citizen2.getUtility() + citizen3.getUtility())/3.0;
     assertEquals(averageUtility, defaultTile.getAverageUtility(), DELTA);
-    
   }
 
   public void test_MoveCitizens() {
