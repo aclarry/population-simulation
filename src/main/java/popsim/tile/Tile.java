@@ -6,13 +6,16 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import popsim.citizen.Citizen;
+import popsim.entity.Entity;
+import popsim.entity.citizen.Citizen;
+import popsim.entity.citizen.CrowdPreferringCitizen;
+import popsim.entity.citizen.OpenPreferringCitizen;
 
 public class Tile {
 
   private TileController controller;
   private List<Citizen> citizens;
-  private Set<Citizen> citizensToMove;
+  private Set<Entity> entitiesToMove;
   private Random randomNumberGenerator;
 
   private double averageUtility;
@@ -24,22 +27,36 @@ public class Tile {
   public Tile() {
     citizens = new ArrayList<Citizen>();
     averageUtility = 0.0;
-    resetCitizensToMove();
+    resetEntitiesToMove();
   }
 
+  /**
+   * Constructor for tile
+   * @param controller
+   *        The controller parent of the tile
+   */
   public Tile(TileController controller) {
     this();
     this.controller = controller;
   }
 
+  /**
+   * Constructor for tile
+   * @param controller
+   *        The controller parent of the tile
+   * @param randomNumberGenerator
+   */
   public Tile(TileController controller, Random randomNumberGenerator) {
     this(controller);
     this.randomNumberGenerator = randomNumberGenerator;
   }
 
   public void addCitizens(int numCitizens) {
-    for (int i = 0; i < numCitizens; i++) {
-      new Citizen(this);
+    for (int i = 0; i < 3*numCitizens/4; i++) {
+      new CrowdPreferringCitizen(this);
+    }
+    for (int i = 0; i < numCitizens/4; i++) {
+      new OpenPreferringCitizen(this);
     }
   }
   
@@ -54,8 +71,37 @@ public class Tile {
     }
   }
 
+  /**
+   * Removes a citizen to the tile
+   * @param citizen
+   *            The citizen to remove to the tile
+   */
   public void removeCitizen(Citizen citizen) {
     citizens.remove(citizen);
+  }
+
+  /**
+   * Adds an entity to this tile
+   * @param entity
+   *          The entity to add to the tile
+   */
+  public void addEntity(Entity entity) {
+    if (entity instanceof Citizen) {
+      citizens.add((Citizen) entity);
+    }
+    // Else, do nothing
+  }
+
+  /**
+   * Removes an entity from this tile
+   * @param entity
+   *          The entity to remove from this tile
+   */
+  public void removeEntity(Entity entity) {
+    if (entity instanceof Citizen) {
+      citizens.remove(entity);
+    } 
+    // Else, do nothing
   }
   
   /**
@@ -112,22 +158,22 @@ public class Tile {
     for (Citizen citizen : citizens) {
       citizen.update();
     }
-    moveCitizens();
+    moveEntities();
     updateAverageUtility();
   }
 
-  public void moveCitizens() {
-    for (Citizen citizen : citizensToMove) {
-      citizen.moveTile();
+  public void moveEntities() {
+    for (Entity entity : entitiesToMove) {
+      entity.moveTile();
     }
   }
 
-  public void addCitizenToMove(Citizen citizen) {
-    citizensToMove.add(citizen);
+  public void addEntityToMove(Entity entity) {
+    entitiesToMove.add(entity);
   }
 
-  private void resetCitizensToMove() {
-    citizensToMove = new HashSet<Citizen>();
+  private void resetEntitiesToMove() {
+    entitiesToMove = new HashSet<Entity>();
   }
 
   /**

@@ -1,4 +1,4 @@
-package popsim.citizen;
+package popsim.entity.citizen;
 
 import java.util.Random;
 import org.junit.*;
@@ -15,7 +15,7 @@ public class CitizenTest {
   @Before
   public void before_ResetDefaultObjects() {
     defaultHome = new Tile();
-    defaultCitizen = new Citizen(defaultHome);
+    defaultCitizen = new DefaultTestCitizen(defaultHome);
 
     defaultHomeStartSize = defaultHome.getNumCitizens();
   }
@@ -41,12 +41,12 @@ public class CitizenTest {
       }
     }; 
 
-    Citizen testCitizen1 = new Citizen(defaultHome, zeroGenerator);
+    Citizen testCitizen1 = new DefaultTestCitizen(defaultHome, zeroGenerator);
     assertTrue(testCitizen1.willMove());
-    defaultHome.addCitizenToMove(testCitizen1);
-    defaultHome.moveCitizens();
+    defaultHome.addEntityToMove(testCitizen1);
+    defaultHome.moveEntities();
     assertNotSame(defaultHome, testCitizen1.getHomeTile());
-    Citizen testCitizen2 = new Citizen(defaultHome, zeroGenerator);
+    Citizen testCitizen2 = new DefaultTestCitizen(defaultHome, zeroGenerator);
     defaultHome.update();
     assertNotSame(defaultHome, testCitizen2.getHomeTile());
   }
